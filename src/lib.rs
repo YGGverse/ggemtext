@@ -1,4 +1,4 @@
-mod line;
+pub mod line;
 
 #[cfg(test)]
 mod tests {
