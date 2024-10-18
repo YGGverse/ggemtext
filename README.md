@@ -1,2 +1,3 @@
 # ggemtext
-Glib-oriented parser for Gemtext
+
+Glib-oriented [Gemtext](https://geminiprotocol.net/docs/gemtext.gmi) API
