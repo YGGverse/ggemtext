@@ -7,8 +7,8 @@ pub struct Multiline {
 }
 
 impl Multiline {
-    // Search in line for tag open,
-    // return Self constructed on success or None
+    /// Search in line for tag open,
+    /// return Self constructed on success or None
     pub fn begin_from(line: &str) -> Option<Self> {
         if line.starts_with("```") {
             let alt = line.trim_start_matches("```");
@@ -26,8 +26,8 @@ impl Multiline {
         None
     }
 
-    // Continue preformatted buffer from line,
-    // set `completed` as True on close tag found
+    /// Continue preformatted buffer from line,
+    /// set `completed` as True on close tag found
     pub fn continue_from(&mut self, line: &str) {
         // Make sure buffer not completed yet
         if self.completed {
