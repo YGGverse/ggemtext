@@ -43,17 +43,17 @@ mod tests {
         };
 
         match Header::from("## H2") {
-            Some(h1) => {
-                assert_eq!(h1.level as i8, Level::H2 as i8);
-                assert_eq!(h1.value, "H2");
+            Some(h2) => {
+                assert_eq!(h2.level as i8, Level::H2 as i8);
+                assert_eq!(h2.value, "H2");
             }
             None => assert!(false),
         };
 
         match Header::from("### H3") {
-            Some(h1) => {
-                assert_eq!(h1.level as i8, Level::H3 as i8);
-                assert_eq!(h1.value, "H3");
+            Some(h3) => {
+                assert_eq!(h3.level as i8, Level::H3 as i8);
+                assert_eq!(h3.value, "H3");
             }
             None => assert!(false),
         };
