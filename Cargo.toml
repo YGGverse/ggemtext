@@ -6,7 +6,13 @@ license = "MIT"
 readme = "README.md"
 description = "Glib-oriented Gemtext API"
 keywords = ["gemtext", "gemini", "gemini-protocol", "gtk", "glib"]
-categories = ["network-programming"]
+categories = [
+    "development-tools",
+    "parser-implementations",
+    "parsing",
+    "text-processing",
+    "value-formatting",
+]
 repository = "https://github.com/YGGverse/ggemtext"
 
 [dependencies.gtk]
