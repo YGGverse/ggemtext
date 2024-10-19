@@ -14,9 +14,7 @@ mod tests {
     fn line() {
         // Code
         match Code::inline_from("```inline```") {
-            Some(inline) => {
-                assert_eq!(inline.value, "inline");
-            }
+            Some(inline) => assert_eq!(inline.value, "inline"),
             None => assert!(false),
         };
 
@@ -70,17 +68,13 @@ mod tests {
 
         // List
         match List::from("* Item") {
-            Some(list) => {
-                assert_eq!(list.value, "Item");
-            }
+            Some(list) => assert_eq!(list.value, "Item"),
             None => assert!(false),
         };
 
         // Quote
         match Quote::from("> Quote") {
-            Some(quote) => {
-                assert_eq!(quote.value, "Quote");
-            }
+            Some(quote) => assert_eq!(quote.value, "Quote"),
             None => assert!(false),
         };
     }
