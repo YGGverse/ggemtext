@@ -5,6 +5,8 @@
 => gemini://geminiprotocol.net
 => gemini://geminiprotocol.net 1965-01-19
 => gemini://geminiprotocol.net Gemini
+=> gemini://geminiprotocol.net 1965-01-19 Gemini
+=> /docs/gemtext.gmi 1965-01-19 Gemini
 
 * Listing item 1
 * Listing item 2
@@ -14,6 +16,11 @@
 
 ``` alt text
 multi
+    line code
+```
+
+```
+alt-less
     line code
 ```
 
