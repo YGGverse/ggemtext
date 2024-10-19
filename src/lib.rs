@@ -57,14 +57,30 @@ mod tests {
         };
 
         // Link
-        match Link::from("=> gemini://geminiprotocol.net Gemini", None, None) {
+        match Link::from(
+            "=> gemini://geminiprotocol.net 1965-01-19 Gemini",
+            None, // absolute path given, base not wanted
+            Some(&gtk::glib::TimeZone::local()),
+        ) {
             Some(link) => {
+                // Alt
                 assert_eq!(link.alt, Some("Gemini".into()));
+
+                // Date
+                match link.timestamp {
+                    Some(timestamp) => {
+                        assert_eq!(timestamp.year(), 1965);
+                        assert_eq!(timestamp.month(), 01);
+                        assert_eq!(timestamp.day_of_month(), 19);
+                    }
+                    None => assert!(false),
+                }
+
+                // URI
                 assert_eq!(link.uri.to_string(), "gemini://geminiprotocol.net");
-                // @TODO timestamp
             }
             None => assert!(false),
-        }; // @TODO options
+        };
 
         // List
         match List::from("* Item") {
