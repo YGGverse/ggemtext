@@ -7,11 +7,11 @@ use ggemtext::line::{
 };
 
 use gtk::glib::{TimeZone, Uri, UriFlags};
-use std::fs::read_to_string;
+use std::fs;
 
 #[test]
 fn gemtext() {
-    match read_to_string("tests/integration_test.gmi") {
+    match fs::read_to_string("tests/integration_test.gmi") {
         Ok(gemtext) => {
             // Init tags collection
             let mut code_inline: Vec<Inline> = Vec::new();
