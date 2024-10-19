@@ -6,9 +6,12 @@ use ggemtext::line::{
     quote::Quote,
 };
 
+use gtk::glib::{TimeZone, Uri, UriFlags};
+use std::fs::read_to_string;
+
 #[test]
 fn gemtext() {
-    match std::fs::read_to_string("tests/integration_test.gmi") {
+    match read_to_string("tests/integration_test.gmi") {
         Ok(gemtext) => {
             // Init tags collection
             let mut code_inline: Vec<Inline> = Vec::new();
@@ -22,13 +25,13 @@ fn gemtext() {
             let mut code_multiline_buffer: Option<Multiline> = None;
 
             // Define base URI as integration_test.gmi contain one relative link
-            let base = match gtk::glib::Uri::parse(
-                "gemini://geminiprotocol.net",
-                gtk::glib::UriFlags::NONE,
-            ) {
+            let base = match Uri::parse("gemini://geminiprotocol.net", UriFlags::NONE) {
                 Ok(uri) => Some(uri),
                 Err(_) => None,
             };
+
+            // Define timezone as integration_test.gmi contain one links with date
+            let timezone = Some(TimeZone::local());
 
             // Parse document by line
             for line in gemtext.lines() {
@@ -59,9 +62,7 @@ fn gemtext() {
                 }
 
                 // Link
-                if let Some(result) =
-                    Link::from(line, base.as_ref(), Some(&gtk::glib::TimeZone::local()))
-                {
+                if let Some(result) = Link::from(line, base.as_ref(), timezone.as_ref()) {
                     link.push(result);
                 }
 
