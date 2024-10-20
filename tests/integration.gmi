@@ -10,18 +10,17 @@
 
 * Listing item 1
 * Listing item 2
-* Listing item 3
 
 ```inline code```
 
 ``` alt text
 multi
-    line code
+    preformatted line
 ```
 
 ```
 alt-less
-    line code
+    preformatted line
 ```
 
 > quoted string
