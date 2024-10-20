@@ -76,7 +76,9 @@ impl Link {
 
         // Alt
         if let Some(value) = regex.get(3) {
-            alt = Some(GString::from(value.as_str()))
+            if !value.is_empty() {
+                alt = Some(GString::from(value.as_str()))
+            }
         };
 
         Some(Self {
