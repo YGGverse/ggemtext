@@ -1,4 +1,4 @@
-use gtk::glib::{GString, Regex, RegexCompileFlags, RegexMatchFlags};
+use glib::{GString, Regex, RegexCompileFlags, RegexMatchFlags};
 
 pub enum Level {
     H1,

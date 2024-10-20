@@ -82,7 +82,7 @@ match Header::from("# H1") {
 match Link::from(
     "=> gemini://geminiprotocol.net 1965-01-19 Gemini",
     None, // absolute path given, base not wanted
-    Some(&gtk::glib::TimeZone::local()),
+    Some(&glib::TimeZone::local()),
 ) {
     Some(link) => {
         // Alt

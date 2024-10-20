@@ -1,6 +1,4 @@
-use gtk::glib::{
-    DateTime, GString, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags,
-};
+use glib::{DateTime, GString, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags};
 
 pub struct Link {
     pub alt: Option<GString>,        // [optional] alternative link description

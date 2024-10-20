@@ -1,4 +1,4 @@
-use gtk::glib::GString;
+use glib::GString;
 
 pub struct Multiline {
     pub alt: Option<GString>,

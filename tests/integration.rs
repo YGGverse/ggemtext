@@ -6,7 +6,7 @@ use ggemtext::line::{
     quote::Quote,
 };
 
-use gtk::glib::{TimeZone, Uri, UriFlags};
+use glib::{TimeZone, Uri, UriFlags};
 use std::fs;
 
 #[test]
