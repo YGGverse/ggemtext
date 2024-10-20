@@ -93,7 +93,7 @@ fn gemtext() {
 
             {
                 let item = code_multiline.get(0).unwrap();
-                assert_eq!(item.alt.clone().unwrap(), " alt text");
+                assert_eq!(item.alt.clone().unwrap(), "alt text");
                 assert_eq!(item.buffer.len(), 3);
                 assert_eq!(item.buffer.get(0).unwrap(), "multi");
                 assert_eq!(item.buffer.get(1).unwrap(), "    preformatted line");

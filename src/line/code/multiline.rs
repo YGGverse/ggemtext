@@ -11,10 +11,10 @@ impl Multiline {
     /// return Self constructed on success or None
     pub fn begin_from(line: &str) -> Option<Self> {
         if line.starts_with("```") {
-            let alt = line.trim_start_matches("```");
+            let alt = line.trim_start_matches("```").trim();
 
             return Some(Self {
-                alt: match alt.trim().is_empty() {
+                alt: match alt.is_empty() {
                     true => None,
                     false => Some(GString::from(alt)),
                 },
