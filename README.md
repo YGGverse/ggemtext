@@ -122,3 +122,11 @@ match Quote::from("> Quote") {
     None => assert!(false),
 };
 ```
+
+## Integrations
+
+* [Yoda](https://github.com/YGGverse/Yoda) - Browser for Gemini Protocol
+
+## See also
+
+* [ggemini](https://github.com/YGGverse/ggemini) - Glib-oriented client for Gemini Protocol
