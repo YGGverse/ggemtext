@@ -10,6 +10,8 @@ cargo add ggemtext
 
 ## Usage
 
+* [Documentation](https://docs.rs/ggemtext/latest/)
+
 ### Line
 
 Line parser, useful for [TextTag](https://docs.gtk.org/gtk4/class.TextTag.html) operations in [TextBuffer](https://docs.gtk.org/gtk4/class.TextBuffer.html) context.
