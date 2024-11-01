@@ -10,7 +10,7 @@ cargo add ggemtext
 
 ## Usage
 
-* [Documentation](https://docs.rs/ggemtext/latest/) (todo)
+* [Documentation](https://docs.rs/ggemtext/latest/)
 
 ### Line
 
