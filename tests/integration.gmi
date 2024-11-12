@@ -7,6 +7,7 @@
 => gemini://geminiprotocol.net Gemini
 => gemini://geminiprotocol.net 1965-01-19 Gemini
 => /docs/gemtext.gmi 1965-01-19 Gemini
+=> //:geminiprotocol.net
 
 * Listing item 1
 * Listing item 2

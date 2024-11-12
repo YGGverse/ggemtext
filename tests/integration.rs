@@ -140,7 +140,7 @@ fn gemtext() {
             } // #3
 
             // Validate links
-            assert_eq!(link.len(), 5);
+            assert_eq!(link.len(), 6);
 
             {
                 let item = link.get(0).unwrap();
@@ -199,6 +199,14 @@ fn gemtext() {
                     "gemini://geminiprotocol.net/docs/gemtext.gmi"
                 );
             } // #5
+
+            {
+                let item = link.get(5).unwrap();
+
+                assert_eq!(item.alt, None);
+                assert_eq!(item.timestamp, None);
+                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+            } // #6
 
             // Validate lists
             assert_eq!(list.len(), 2);
