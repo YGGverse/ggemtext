@@ -54,7 +54,7 @@ impl Link {
             // Base resolve not requested
             None => {
                 // Just try convert address to valid URI
-                match Uri::parse(&unresolved_address, UriFlags::NONE) {
+                match Uri::parse(unresolved_address, UriFlags::NONE) {
                     Ok(unresolved_uri) => unresolved_uri,
                     Err(_) => return None,
                 }
