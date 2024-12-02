@@ -1,7 +1,7 @@
-use glib::{GString, Regex, RegexCompileFlags, RegexMatchFlags};
+use glib::{Regex, RegexCompileFlags, RegexMatchFlags};
 
 pub struct Inline {
-    pub value: GString,
+    pub value: String,
 }
 
 impl Inline {
@@ -23,7 +23,7 @@ impl Inline {
 
         // Result
         Some(Self {
-            value: GString::from(value.as_str()),
+            value: value.to_string(),
         })
     }
 }
