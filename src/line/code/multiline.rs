@@ -1,11 +1,12 @@
 pub mod error;
 pub use error::Error;
 
-use glib::GString;
+pub const NEW_LINE: char = '\n';
+pub const TAG: &str = "```";
 
 pub struct Multiline {
-    pub alt: Option<GString>,
-    pub buffer: Vec<GString>,
+    pub alt: Option<String>,
+    pub value: String,
     pub completed: bool,
 }
 
@@ -13,15 +14,15 @@ impl Multiline {
     /// Search in line for tag open,
     /// return Self constructed on success or None
     pub fn begin_from(line: &str) -> Option<Self> {
-        if line.starts_with("```") {
-            let alt = line.trim_start_matches("```").trim();
+        if line.starts_with(TAG) {
+            let alt = line.trim_start_matches(TAG).trim();
 
             return Some(Self {
                 alt: match alt.is_empty() {
                     true => None,
-                    false => Some(GString::from(alt)),
+                    false => Some(String::from(alt)),
                 },
-                buffer: Vec::new(),
+                value: String::new(),
                 completed: false,
             });
         }
@@ -37,14 +38,15 @@ impl Multiline {
             return Err(Error::Completed);
         }
 
-        // Line contain close tag
-        if line.ends_with("```") {
-            self.completed = true;
-        }
+        // Append to value, trim close tag on exists
+        self.value.push_str(line.trim_end_matches(TAG));
 
-        // Append data to the buffer, trim close tag on exists
-        self.buffer
-            .push(GString::from(line.trim_end_matches("```")));
+        // Line contain close tag
+        if line.ends_with(TAG) {
+            self.completed = true;
+        } else {
+            self.value.push(NEW_LINE);
+        }
 
         Ok(())
     }
