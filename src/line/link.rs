@@ -1,7 +1,7 @@
-use glib::{DateTime, GString, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags};
+use glib::{DateTime, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags};
 
 pub struct Link {
-    pub alt: Option<GString>,        // [optional] alternative link description
+    pub alt: Option<String>,         // [optional] alternative link description
     pub is_external: Option<bool>,   // [optional] external link indication, on base option provided
     pub timestamp: Option<DateTime>, // [optional] valid link DateTime object
     pub uri: Uri,                    // [required] valid link URI object
@@ -86,7 +86,7 @@ impl Link {
         // Alt
         if let Some(value) = regex.get(3) {
             if !value.is_empty() {
-                alt = Some(GString::from(value.as_str()))
+                alt = Some(value.to_string())
             }
         };
 
