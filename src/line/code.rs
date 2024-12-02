@@ -1,6 +1,8 @@
+pub mod error;
 pub mod inline;
 pub mod multiline;
 
+pub use error::Error;
 use inline::Inline;
 use multiline::Multiline;
 
@@ -19,7 +21,10 @@ impl Code {
         Multiline::begin_from(line)
     }
 
-    pub fn multiline_continue_from(this: &mut Multiline, line: &str) {
-        Multiline::continue_from(this, line)
+    pub fn multiline_continue_from(this: &mut Multiline, line: &str) -> Result<(), Error> {
+        match Multiline::continue_from(this, line) {
+            Ok(()) => Ok(()),
+            Err(e) => Err(Error::Multiline(e)),
+        }
     }
 }

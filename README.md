@@ -54,9 +54,9 @@ match Code::inline_from("```inline```") {
 ``` rust
 match Code::multiline_begin_from("```alt") {
     Some(mut multiline) => {
-        Code::multiline_continue_from(&mut multiline, "line 1");
-        Code::multiline_continue_from(&mut multiline, "line 2");
-        Code::multiline_continue_from(&mut multiline, "```"); // complete
+        assert!(Code::multiline_continue_from(&mut multiline, "line 1").is_ok());
+        assert!(Code::multiline_continue_from(&mut multiline, "line 2").is_ok());
+        assert!(Code::multiline_continue_from(&mut multiline, "```").is_ok()); // complete
 
         assert!(multiline.completed);
         assert_eq!(multiline.alt, Some("alt".into()));

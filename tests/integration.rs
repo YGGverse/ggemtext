@@ -50,7 +50,7 @@ fn gemtext() {
                         }
                     }
                     Some(ref mut result) => {
-                        Code::multiline_continue_from(result, line);
+                        assert!(Code::multiline_continue_from(result, line).is_ok());
                         if result.completed {
                             code_multiline.push(code_multiline_buffer.take().unwrap());
                             code_multiline_buffer = None;

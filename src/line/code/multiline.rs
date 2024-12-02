@@ -1,3 +1,6 @@
+pub mod error;
+pub use error::Error;
+
 use glib::GString;
 
 pub struct Multiline {
@@ -28,10 +31,10 @@ impl Multiline {
 
     /// Continue preformatted buffer from line,
     /// set `completed` as True on close tag found
-    pub fn continue_from(&mut self, line: &str) {
+    pub fn continue_from(&mut self, line: &str) -> Result<(), Error> {
         // Make sure buffer not completed yet
         if self.completed {
-            panic!("Could not continue as completed") // @TODO handle
+            return Err(Error::Completed);
         }
 
         // Line contain close tag
@@ -42,5 +45,7 @@ impl Multiline {
         // Append data to the buffer, trim close tag on exists
         self.buffer
             .push(GString::from(line.trim_end_matches("```")));
+
+        Ok(())
     }
 }
