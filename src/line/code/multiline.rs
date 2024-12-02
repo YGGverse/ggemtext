@@ -38,15 +38,18 @@ impl Multiline {
             return Err(Error::Completed);
         }
 
-        // Append to value, trim close tag on exists
-        self.value.push_str(line.trim_end_matches(TAG));
-
         // Line contain close tag
         if line.ends_with(TAG) {
             self.completed = true;
-        } else {
+        }
+
+        // Prepend new line before next lines only
+        if !self.value.is_empty() {
             self.value.push(NEW_LINE);
         }
+
+        // Append to value, trim close tag on exists
+        self.value.push_str(line.trim_end_matches(TAG));
 
         Ok(())
     }
