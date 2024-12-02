@@ -94,17 +94,17 @@ fn gemtext() {
             {
                 let item = code_multiline.get(0).unwrap();
                 assert_eq!(item.alt.clone().unwrap(), "alt text");
-                assert_eq!(item.buffer.len(), 3);
-                assert_eq!(item.buffer.get(0).unwrap(), "multi");
-                assert_eq!(item.buffer.get(1).unwrap(), "    preformatted line");
+                assert_eq!(item.value.lines().count(), 2);
+                assert_eq!(item.value.lines().nth(0).unwrap(), "multi");
+                assert_eq!(item.value.lines().nth(1).unwrap(), "    preformatted line");
             } // #1
 
             {
                 let item = code_multiline.get(1).unwrap();
                 assert_eq!(item.alt.clone(), None);
-                assert_eq!(item.buffer.len(), 3);
-                assert_eq!(item.buffer.get(0).unwrap(), "alt-less");
-                assert_eq!(item.buffer.get(1).unwrap(), "    preformatted line");
+                assert_eq!(item.value.lines().count(), 2);
+                assert_eq!(item.value.lines().nth(0).unwrap(), "alt-less");
+                assert_eq!(item.value.lines().nth(1).unwrap(), "    preformatted line");
             } // #2
 
             // Validate headers
