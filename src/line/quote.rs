@@ -19,9 +19,8 @@ impl Quote {
         );
 
         // Extract formatted value
-        let value = regex.get(1)?.trim().to_string();
-
-        // Result
-        Some(Self { value })
+        Some(Self {
+            value: regex.get(1)?.trim().to_string(),
+        })
     }
 }

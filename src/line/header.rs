@@ -26,27 +26,15 @@ impl Header {
             RegexMatchFlags::DEFAULT,
         );
 
-        // Detect header level
-        let level = regex.get(1)?;
-
-        let level = match level.len() {
-            1 => Level::H1,
-            2 => Level::H2,
-            3 => Level::H3,
-            _ => return None,
-        };
-
-        // Detect header value
-        let value = regex.get(2)?.trim();
-
-        if value.is_empty() {
-            return None;
-        }
-
         // Result
         Some(Self {
-            level,
-            value: value.to_string(),
+            level: match regex.get(1)?.len() {
+                1 => Level::H1,
+                2 => Level::H2,
+                3 => Level::H3,
+                _ => return None,
+            },
+            value: regex.get(2)?.trim().to_string(),
         })
     }
 }
