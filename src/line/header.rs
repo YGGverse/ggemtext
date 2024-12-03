@@ -37,13 +37,16 @@ impl Header {
         };
 
         // Detect header value
-        let value = regex.get(2)?.to_string();
+        let value = regex.get(2)?.trim();
 
-        if value.trim().is_empty() {
+        if value.is_empty() {
             return None;
         }
 
         // Result
-        Some(Self { level, value })
+        Some(Self {
+            level,
+            value: value.to_string(),
+        })
     }
 }

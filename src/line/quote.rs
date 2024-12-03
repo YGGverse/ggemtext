@@ -18,7 +18,7 @@ impl Quote {
             RegexMatchFlags::DEFAULT,
         );
 
-        // Detect value
+        // Extract formatted value
         let value = regex.get(1)?.trim().to_string();
 
         // Result

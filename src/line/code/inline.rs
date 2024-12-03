@@ -18,10 +18,10 @@ impl Inline {
             RegexMatchFlags::DEFAULT,
         );
 
-        // Detect value
-        let value = regex.get(1)?;
+        // Extract formatted value
+        let value = regex.get(1)?.trim();
 
-        if value.trim().is_empty() {
+        if value.is_empty() {
             return None;
         }
 
