@@ -1,5 +1,5 @@
 use ggemtext::line::{
-    code::{inline::Inline, multiline::Multiline, Code},
+    code::{inline::Inline, multiline::Multiline},
     header::{Header, Level},
     link::Link,
     list::List,
@@ -36,7 +36,7 @@ fn gemtext() {
             // Parse document by line
             for line in gemtext.lines() {
                 // Inline code
-                if let Some(result) = Code::inline_from(line) {
+                if let Some(result) = Inline::from(line) {
                     code_inline.push(result);
                     continue;
                 }
@@ -44,13 +44,13 @@ fn gemtext() {
                 // Multiline code
                 match code_multiline_buffer {
                     None => {
-                        if let Some(code) = Code::multiline_begin_from(line) {
+                        if let Some(code) = Multiline::begin_from(line) {
                             code_multiline_buffer = Some(code);
                             continue;
                         }
                     }
                     Some(ref mut result) => {
-                        assert!(Code::multiline_continue_from(result, line).is_ok());
+                        assert!(Multiline::continue_from(result, line).is_ok());
                         if result.completed {
                             code_multiline.push(code_multiline_buffer.take().unwrap());
                             code_multiline_buffer = None;

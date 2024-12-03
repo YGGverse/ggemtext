@@ -11,7 +11,7 @@ pub struct Link {
 impl Link {
     // Constructors
 
-    /// Parse `Self` from string
+    /// Parse `Self` from line string
     pub fn from(line: &str, base: Option<&Uri>, timezone: Option<&TimeZone>) -> Option<Self> {
         // Define initial values
         let mut alt = None;

@@ -8,7 +8,7 @@ pub struct Quote {
 impl Quote {
     // Constructors
 
-    /// Parse `Self` from string
+    /// Parse `Self` from line string
     pub fn from(line: &str) -> Option<Self> {
         // Parse line
         let regex = Regex::split_simple(

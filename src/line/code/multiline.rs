@@ -16,7 +16,7 @@ pub struct Multiline {
 impl Multiline {
     // Constructors
 
-    /// Search in line for tag open,
+    /// Search in line string for tag open,
     /// return Self constructed on success or None
     pub fn begin_from(line: &str) -> Option<Self> {
         if line.starts_with(TAG) {
@@ -35,7 +35,7 @@ impl Multiline {
         None
     }
 
-    /// Continue preformatted buffer from line,
+    /// Continue preformatted buffer from line string,
     /// set `completed` as True on close tag found
     pub fn continue_from(&mut self, line: &str) -> Result<(), Error> {
         // Make sure buffer not completed yet
