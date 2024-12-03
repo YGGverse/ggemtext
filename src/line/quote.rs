@@ -19,11 +19,9 @@ impl Quote {
         );
 
         // Detect value
-        let value = regex.get(1)?.trim();
+        let value = regex.get(1)?.trim().to_string();
 
         // Result
-        Some(Self {
-            value: String::from(value),
-        })
+        Some(Self { value })
     }
 }

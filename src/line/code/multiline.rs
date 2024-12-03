@@ -25,7 +25,7 @@ impl Multiline {
             return Some(Self {
                 alt: match alt.is_empty() {
                     true => None,
-                    false => Some(String::from(alt)),
+                    false => Some(alt.to_string()),
                 },
                 value: String::new(),
                 completed: false,
