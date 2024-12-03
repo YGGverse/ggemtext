@@ -20,7 +20,7 @@ Line parser, useful for [TextTag](https://docs.gtk.org/gtk4/class.TextTag.html) 
 
 ``` rust
 use ggemtext::line::{
-    code::Code,
+    code::{Inline, Multiline},
     header::{Header, Level},
     link::Link,
     list::List,
@@ -43,7 +43,7 @@ for line in gemtext.lines() {
 ##### Inline
 
 ``` rust
-match Code::inline_from("```inline```") {
+match Inline::from("```inline```") {
     Some(inline) => assert_eq!(inline.value, "inline"),
     None => assert!(false),
 };
@@ -52,11 +52,11 @@ match Code::inline_from("```inline```") {
 ##### Multiline
 
 ``` rust
-match Code::multiline_begin_from("```alt") {
+match Multiline::begin_from("```alt") {
     Some(mut multiline) => {
-        assert!(Code::multiline_continue_from(&mut multiline, "line 1").is_ok());
-        assert!(Code::multiline_continue_from(&mut multiline, "line 2").is_ok());
-        assert!(Code::multiline_continue_from(&mut multiline, "```").is_ok()); // complete
+        assert!(Multiline::continue_from(&mut multiline, "line 1").is_ok());
+        assert!(Multiline::continue_from(&mut multiline, "line 2").is_ok());
+        assert!(Multiline::continue_from(&mut multiline, "```").is_ok()); // complete
 
         assert!(multiline.completed);
         assert_eq!(multiline.alt, Some("alt".into()));
