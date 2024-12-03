@@ -1,7 +1,7 @@
-use glib::{GString, Regex, RegexCompileFlags, RegexMatchFlags};
+use glib::{Regex, RegexCompileFlags, RegexMatchFlags};
 
 pub struct Quote {
-    pub value: GString,
+    pub value: String,
 }
 
 impl Quote {
@@ -15,11 +15,11 @@ impl Quote {
         );
 
         // Detect value
-        let value = regex.get(1)?;
+        let value = regex.get(1)?.trim();
 
         // Result
         Some(Self {
-            value: GString::from(value.as_str()),
+            value: String::from(value),
         })
     }
 }
