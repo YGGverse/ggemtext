@@ -17,10 +17,6 @@ impl Inline {
         // Detect value
         let value = regex.get(1)?;
 
-        if value.trim().is_empty() {
-            return None;
-        }
-
         // Result
         Some(Self {
             value: value.to_string(),
