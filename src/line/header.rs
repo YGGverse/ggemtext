@@ -1,4 +1,4 @@
-use glib::{GString, Regex, RegexCompileFlags, RegexMatchFlags};
+use glib::{Regex, RegexCompileFlags, RegexMatchFlags};
 
 /// [Header](https://geminiprotocol.net/docs/gemtext-specification.gmi#heading-lines) type holder
 pub enum Level {
@@ -9,7 +9,7 @@ pub enum Level {
 
 /// [Header](https://geminiprotocol.net/docs/gemtext-specification.gmi#heading-lines) entity holder
 pub struct Header {
-    pub value: GString,
+    pub value: String,
     pub level: Level,
 }
 
@@ -37,16 +37,13 @@ impl Header {
         };
 
         // Detect header value
-        let value = regex.get(2)?;
+        let value = regex.get(2)?.to_string();
 
         if value.trim().is_empty() {
             return None;
         }
 
         // Result
-        Some(Self {
-            level,
-            value: GString::from(value.as_str()),
-        })
+        Some(Self { level, value })
     }
 }
