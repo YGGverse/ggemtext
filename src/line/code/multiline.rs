@@ -1,9 +1,12 @@
 pub mod error;
 pub use error::Error;
 
+// Shared defaults
+
 pub const NEW_LINE: char = '\n';
 pub const TAG: &str = "```";
 
+/// Multi-line [preformatted](https://geminiprotocol.net/docs/gemtext-specification.gmi#in-pre-formatted-mode) entity holder
 pub struct Multiline {
     pub alt: Option<String>,
     pub value: String,
@@ -11,6 +14,8 @@ pub struct Multiline {
 }
 
 impl Multiline {
+    // Constructors
+
     /// Search in line for tag open,
     /// return Self constructed on success or None
     pub fn begin_from(line: &str) -> Option<Self> {

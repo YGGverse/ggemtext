@@ -1,5 +1,6 @@
 use glib::{DateTime, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags};
 
+/// [Link](https://geminiprotocol.net/docs/gemtext-specification.gmi#link-lines) entity holder
 pub struct Link {
     pub alt: Option<String>,         // [optional] alternative link description
     pub is_external: Option<bool>,   // [optional] external link indication, on base option provided
@@ -8,6 +9,9 @@ pub struct Link {
 }
 
 impl Link {
+    // Constructors
+
+    /// Parse `Self` from string
     pub fn from(line: &str, base: Option<&Uri>, timezone: Option<&TimeZone>) -> Option<Self> {
         // Define initial values
         let mut alt = None;

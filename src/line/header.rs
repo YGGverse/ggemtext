@@ -1,17 +1,22 @@
 use glib::{GString, Regex, RegexCompileFlags, RegexMatchFlags};
 
+/// [Header](https://geminiprotocol.net/docs/gemtext-specification.gmi#heading-lines) type holder
 pub enum Level {
     H1,
     H2,
     H3,
 }
 
+/// [Header](https://geminiprotocol.net/docs/gemtext-specification.gmi#heading-lines) entity holder
 pub struct Header {
     pub value: GString,
     pub level: Level,
 }
 
 impl Header {
+    // Constructors
+
+    /// Parse `Self` from string
     pub fn from(line: &str) -> Option<Self> {
         // Parse line
         let regex = Regex::split_simple(

@@ -11,16 +11,19 @@ pub struct Code {
 }
 
 impl Code {
-    // Inline
+    // Constructors
+
+    /// Parse inline `Self` from string
     pub fn inline_from(line: &str) -> Option<Inline> {
         Inline::from(line)
     }
 
-    // Multiline
+    /// Begin multi-line parse `Self` from string
     pub fn multiline_begin_from(line: &str) -> Option<Multiline> {
         Multiline::begin_from(line)
     }
 
+    /// Continue multi-line parse `Self` from string
     pub fn multiline_continue_from(this: &mut Multiline, line: &str) -> Result<(), Error> {
         match Multiline::continue_from(this, line) {
             Ok(()) => Ok(()),

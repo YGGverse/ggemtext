@@ -1,11 +1,13 @@
 use glib::{Regex, RegexCompileFlags, RegexMatchFlags};
 
-/// [List item](https://geminiprotocol.net/docs/gemtext-specification.gmi#list-items)
+/// [List](https://geminiprotocol.net/docs/gemtext-specification.gmi#list-items) entity holder
 pub struct List {
     pub value: String,
 }
 
 impl List {
+    // Constructors
+
     /// Parse `Self` from string
     pub fn from(line: &str) -> Option<Self> {
         // Parse line
