@@ -12,7 +12,7 @@ impl List {
     pub fn from(line: &str) -> Option<Self> {
         // Parse line
         let regex = Regex::split_simple(
-            r"^\*\s*(.+)$",
+            r"^\*\s*(.*)$",
             line,
             RegexCompileFlags::DEFAULT,
             RegexMatchFlags::DEFAULT,
