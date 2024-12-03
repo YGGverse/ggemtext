@@ -78,9 +78,6 @@ impl Link {
 
         // Timestamp
         if let Some(date) = regex.get(2) {
-            // @TODO even possible, but simpler to work with `DateTime` API
-            // await for new features in `Date` as better in Gemini context
-            // https://docs.gtk.org/glib/struct.Date.html
             timestamp = match DateTime::from_iso8601(&format!("{date}T00:00:00"), timezone) {
                 Ok(value) => Some(value),
                 Err(_) => None,
