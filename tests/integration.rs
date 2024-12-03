@@ -1,5 +1,5 @@
 use ggemtext::line::{
-    code::{inline::Inline, multiline::Multiline},
+    code::{Inline, Multiline},
     header::{Header, Level},
     link::Link,
     list::List,
