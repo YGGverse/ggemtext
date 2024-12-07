@@ -86,25 +86,31 @@ fn gemtext() {
 
             // Validate inline code
             assert_eq!(code_inline.len(), 1);
-            assert_eq!(code_inline.get(0).unwrap().value, "inline code");
+            assert_eq!(code_inline.first().unwrap().value, "inline code");
 
             // Validate multiline code
             assert_eq!(code_multiline.len(), 2);
 
             {
-                let item = code_multiline.get(0).unwrap();
+                let item = code_multiline.first().unwrap();
                 assert_eq!(item.alt.clone().unwrap(), "alt text");
+
                 assert_eq!(item.value.lines().count(), 2);
-                assert_eq!(item.value.lines().nth(0).unwrap(), "multi");
-                assert_eq!(item.value.lines().nth(1).unwrap(), "    preformatted line");
+
+                let mut lines = item.value.lines();
+                assert_eq!(lines.next().unwrap(), "multi");
+                assert_eq!(lines.next().unwrap(), "    preformatted line");
             } // #1
 
             {
                 let item = code_multiline.get(1).unwrap();
                 assert_eq!(item.alt.clone(), None);
+
                 assert_eq!(item.value.lines().count(), 2);
-                assert_eq!(item.value.lines().nth(0).unwrap(), "alt-less");
-                assert_eq!(item.value.lines().nth(1).unwrap(), "    preformatted line");
+
+                let mut lines = item.value.lines();
+                assert_eq!(lines.next().unwrap(), "alt-less");
+                assert_eq!(lines.next().unwrap(), "    preformatted line");
             } // #2
 
             // Validate headers
@@ -119,7 +125,7 @@ fn gemtext() {
             } // comparison helper
 
             {
-                let item = header.get(0).unwrap();
+                let item = header.first().unwrap();
 
                 assert_eq!(to_i8(&item.level), to_i8(&Level::H1));
                 assert_eq!(item.value, "H1");
@@ -143,7 +149,7 @@ fn gemtext() {
             assert_eq!(link.len(), 6);
 
             {
-                let item = link.get(0).unwrap();
+                let item = link.first().unwrap();
 
                 assert_eq!(item.alt, None);
                 assert_eq!(item.timestamp, None);
@@ -157,7 +163,7 @@ fn gemtext() {
 
                 let timestamp = item.timestamp.clone().unwrap();
                 assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 01);
+                assert_eq!(timestamp.month(), 1);
                 assert_eq!(timestamp.day_of_month(), 19);
 
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
@@ -178,7 +184,7 @@ fn gemtext() {
 
                 let timestamp = item.timestamp.clone().unwrap();
                 assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 01);
+                assert_eq!(timestamp.month(), 1);
                 assert_eq!(timestamp.day_of_month(), 19);
 
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
@@ -191,7 +197,7 @@ fn gemtext() {
 
                 let timestamp = item.timestamp.clone().unwrap();
                 assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 01);
+                assert_eq!(timestamp.month(), 1);
                 assert_eq!(timestamp.day_of_month(), 19);
 
                 assert_eq!(
@@ -210,16 +216,14 @@ fn gemtext() {
 
             // Validate lists
             assert_eq!(list.len(), 2);
-            assert_eq!(list.get(0).unwrap().value, "Listing item 1");
-            assert_eq!(list.get(1).unwrap().value, "Listing item 2");
+            assert_eq!(list.first().unwrap().value, "Listing item 1");
+            assert_eq!(list.last().unwrap().value, "Listing item 2");
 
             // Validate quotes
             assert_eq!(quote.len(), 1);
-            assert_eq!(quote.get(0).unwrap().value, "quoted string");
+            assert_eq!(quote.first().unwrap().value, "quoted string");
         }
         // Could not load gemtext file
-        Err(_) => {
-            assert!(false);
-        }
+        Err(_) => panic!(),
     }
 }

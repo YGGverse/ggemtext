@@ -94,7 +94,7 @@ match Link::from(
         match link.timestamp {
             Some(timestamp) => {
                 assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 01);
+                assert_eq!(timestamp.month(), 1);
                 assert_eq!(timestamp.day_of_month(), 19);
             }
             None => assert!(false),
