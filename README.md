@@ -1,5 +1,7 @@
 # ggemtext
 
+![Build](https://github.com/YGGverse/ggemtext/actions/workflows/build.yml/badge.svg)
+
 Glib-oriented [Gemtext](https://geminiprotocol.net/docs/gemtext.gmi) API
 
 ## Install
