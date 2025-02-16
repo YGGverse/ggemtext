@@ -116,7 +116,7 @@ fn gemtext() {
             // Validate headers
             assert_eq!(header.len(), 3);
 
-            fn to_i8(level: &Level) -> i8 {
+            fn to_u8(level: &Level) -> u8 {
                 match level {
                     Level::H1 => 1,
                     Level::H2 => 2,
@@ -127,21 +127,21 @@ fn gemtext() {
             {
                 let item = header.first().unwrap();
 
-                assert_eq!(to_i8(&item.level), to_i8(&Level::H1));
+                assert_eq!(to_u8(&item.level), to_u8(&Level::H1));
                 assert_eq!(item.value, "H1");
             } // #1
 
             {
                 let item = header.get(1).unwrap();
 
-                assert_eq!(to_i8(&item.level), to_i8(&Level::H2));
+                assert_eq!(to_u8(&item.level), to_u8(&Level::H2));
                 assert_eq!(item.value, "H2");
             } // #2
 
             {
                 let item = header.get(2).unwrap();
 
-                assert_eq!(to_i8(&item.level), to_i8(&Level::H3));
+                assert_eq!(to_u8(&item.level), to_u8(&Level::H3));
                 assert_eq!(item.value, "H3");
             } // #3
 

@@ -75,7 +75,7 @@ match Multiline::begin_from("```alt") {
 ``` rust
 match Header::from("# H1") {
     Some(h1) => {
-        assert_eq!(h1.level as i8, Level::H1 as i8);
+        assert_eq!(h1.level as u8, Level::H1 as u8);
         assert_eq!(h1.value, "H1");
     }
     None => assert!(false),
