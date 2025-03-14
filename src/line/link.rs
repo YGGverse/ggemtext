@@ -29,17 +29,25 @@ impl Link {
         // Detect address required to continue
         let mut unresolved_address = regex.get(1)?.to_string();
 
-        // Seems that [Uri resolver](https://docs.gtk.org/glib/type_func.Uri.resolve_relative.html)
-        // does not support [protocol-relative URI](https://datatracker.ietf.org/doc/html/rfc3986#section-4.2)
-        // resolve manually
-        if unresolved_address.starts_with("//:") {
-            let scheme = match base {
-                Some(base) => base.scheme(),
+        // Relative scheme patch
+        // https://datatracker.ietf.org/doc/html/rfc3986#section-4.2
+        if let Some(p) = unresolved_address.strip_prefix("//") {
+            let postfix = p.trim_start_matches(":");
+            match base {
+                Some(b) => {
+                    unresolved_address = format!(
+                        "{}://{}",
+                        b.scheme(),
+                        if postfix.is_empty() {
+                            b.host()?
+                        } else {
+                            postfix.into()
+                        }
+                    )
+                }
                 None => return None,
-            };
-            unresolved_address = unresolved_address.replace("//:", &format!("{scheme}://"));
+            }
         }
-
         // Convert address to the valid URI
         let uri = match base {
             // Base conversion requested
@@ -54,10 +62,7 @@ impl Link {
                         // Try convert string to the valid URI
                         match Uri::parse(&resolved_str, UriFlags::NONE) {
                             Ok(resolved_uri) => {
-                                // Change external status
                                 is_external = Some(resolved_uri.scheme() != base_uri.scheme());
-
-                                // Result
                                 resolved_uri
                             }
                             Err(_) => return None,

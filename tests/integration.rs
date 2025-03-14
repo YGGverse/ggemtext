@@ -146,7 +146,7 @@ fn gemtext() {
             } // #3
 
             // Validate links
-            assert_eq!(link.len(), 6);
+            assert_eq!(link.len(), 8);
 
             {
                 let item = link.first().unwrap();
@@ -213,6 +213,22 @@ fn gemtext() {
                 assert_eq!(item.timestamp, None);
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #6
+
+            {
+                let item = link.get(6).unwrap();
+
+                assert_eq!(item.alt, None);
+                assert_eq!(item.timestamp, None);
+                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+            } // #7
+
+            {
+                let item = link.get(7).unwrap();
+
+                assert_eq!(item.alt, None);
+                assert_eq!(item.timestamp, None);
+                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+            } // #8
 
             // Validate lists
             assert_eq!(list.len(), 2);
