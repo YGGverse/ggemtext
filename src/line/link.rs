@@ -38,7 +38,7 @@ impl Link {
                     unresolved_address = format!(
                         "{}://{}",
                         b.scheme(),
-                        if postfix.is_empty() || postfix == "/" {
+                        if postfix.is_empty() {
                             b.host()?
                         } else {
                             postfix.into()
