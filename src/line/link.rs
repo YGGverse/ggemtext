@@ -3,7 +3,6 @@ use glib::{DateTime, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, U
 /// [Link](https://geminiprotocol.net/docs/gemtext-specification.gmi#link-lines) entity holder
 pub struct Link {
     pub alt: Option<String>,         // [optional] alternative link description
-    pub is_external: Option<bool>,   // [optional] external link indication, on base option provided
     pub timestamp: Option<DateTime>, // [optional] valid link DateTime object
     pub uri: Uri,                    // [required] valid link URI object
 }
@@ -16,7 +15,6 @@ impl Link {
         // Define initial values
         let mut alt = None;
         let mut timestamp = None;
-        let mut is_external = None;
 
         // Begin line parse
         let regex = Regex::split_simple(
@@ -57,10 +55,7 @@ impl Link {
                     Ok(resolved_str) => {
                         // Try convert string to the valid URI
                         match Uri::parse(&resolved_str, UriFlags::NONE) {
-                            Ok(resolved_uri) => {
-                                is_external = Some(resolved_uri.scheme() != base_uri.scheme());
-                                resolved_uri
-                            }
+                            Ok(resolved_uri) => resolved_uri,
                             Err(_) => return None,
                         }
                     }
@@ -94,7 +89,6 @@ impl Link {
 
         Some(Self {
             alt,
-            is_external,
             timestamp,
             uri,
         })
