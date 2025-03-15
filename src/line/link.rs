@@ -32,21 +32,17 @@ impl Link {
         // Relative scheme patch
         // https://datatracker.ietf.org/doc/html/rfc3986#section-4.2
         if let Some(p) = unresolved_address.strip_prefix("//") {
+            let b = base?;
             let postfix = p.trim_start_matches(":");
-            match base {
-                Some(b) => {
-                    unresolved_address = format!(
-                        "{}://{}",
-                        b.scheme(),
-                        if postfix.is_empty() {
-                            b.host()?
-                        } else {
-                            postfix.into()
-                        }
-                    )
+            unresolved_address = format!(
+                "{}://{}",
+                b.scheme(),
+                if postfix.is_empty() {
+                    format!("{}/", b.host()?)
+                } else {
+                    postfix.into()
                 }
-                None => return None,
-            }
+            )
         }
         // Convert address to the valid URI
         let uri = match base {

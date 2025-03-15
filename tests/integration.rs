@@ -227,7 +227,7 @@ fn gemtext() {
 
                 assert_eq!(item.alt, None);
                 assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net/");
             } // #8
 
             // Validate lists
