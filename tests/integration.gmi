@@ -9,6 +9,7 @@
 => /docs/gemtext.gmi 1965-01-19 Gemini
 => //:geminiprotocol.net
 => //geminiprotocol.net
+=> //geminiprotocol.net/path
 => //
 
 * Listing item 1

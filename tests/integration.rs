@@ -16,8 +16,8 @@ fn gemtext() {
             // Init tags collection
             let mut code_inline: Vec<Inline> = Vec::new();
             let mut code_multiline: Vec<Multiline> = Vec::new();
-            let mut header: Vec<Header> = Vec::new();
-            let mut link: Vec<Link> = Vec::new();
+            let mut headers: Vec<Header> = Vec::new();
+            let mut links: Vec<Link> = Vec::new();
             let mut list: Vec<List> = Vec::new();
             let mut quote: Vec<Quote> = Vec::new();
 
@@ -61,13 +61,13 @@ fn gemtext() {
 
                 // Header
                 if let Some(result) = Header::from(line) {
-                    header.push(result);
+                    headers.push(result);
                     continue;
                 }
 
                 // Link
                 if let Some(result) = Link::from(line, base.as_ref(), timezone.as_ref()) {
-                    link.push(result);
+                    links.push(result);
                     continue;
                 }
 
@@ -114,7 +114,7 @@ fn gemtext() {
             } // #2
 
             // Validate headers
-            assert_eq!(header.len(), 3);
+            assert_eq!(headers.len(), 3);
 
             fn to_u8(level: &Level) -> u8 {
                 match level {
@@ -123,41 +123,38 @@ fn gemtext() {
                     Level::H3 => 3,
                 }
             } // comparison helper
-
+            let mut header = headers.iter();
             {
-                let item = header.first().unwrap();
+                let item = header.next().unwrap();
 
                 assert_eq!(to_u8(&item.level), to_u8(&Level::H1));
                 assert_eq!(item.value, "H1");
             } // #1
-
             {
-                let item = header.get(1).unwrap();
+                let item = header.next().unwrap();
 
                 assert_eq!(to_u8(&item.level), to_u8(&Level::H2));
                 assert_eq!(item.value, "H2");
             } // #2
-
             {
-                let item = header.get(2).unwrap();
+                let item = header.next().unwrap();
 
                 assert_eq!(to_u8(&item.level), to_u8(&Level::H3));
                 assert_eq!(item.value, "H3");
             } // #3
 
             // Validate links
-            assert_eq!(link.len(), 8);
-
+            assert_eq!(links.len(), 9);
+            let mut link = links.iter();
             {
-                let item = link.first().unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
                 assert_eq!(item.timestamp, None);
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #1
-
             {
-                let item = link.get(1).unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
 
@@ -168,17 +165,15 @@ fn gemtext() {
 
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #2
-
             {
-                let item = link.get(2).unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt.clone().unwrap(), "Gemini");
                 assert_eq!(item.timestamp, None);
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #3
-
             {
-                let item = link.get(3).unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt.clone().unwrap(), "Gemini");
 
@@ -189,9 +184,8 @@ fn gemtext() {
 
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #4
-
             {
-                let item = link.get(4).unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt.clone().unwrap(), "Gemini");
 
@@ -205,30 +199,34 @@ fn gemtext() {
                     "gemini://geminiprotocol.net/docs/gemtext.gmi"
                 );
             } // #5
-
             {
-                let item = link.get(5).unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
                 assert_eq!(item.timestamp, None);
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #6
-
             {
-                let item = link.get(6).unwrap();
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
                 assert_eq!(item.timestamp, None);
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
             } // #7
-
             {
-                let item = link.get(7).unwrap();
+                let item = link.next().unwrap();
+
+                assert_eq!(item.alt, None);
+                assert_eq!(item.timestamp, None);
+                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net/path");
+            } // #8
+            {
+                let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
                 assert_eq!(item.timestamp, None);
                 assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net/");
-            } // #8
+            } // #9
 
             // Validate lists
             assert_eq!(list.len(), 2);
