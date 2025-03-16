@@ -60,7 +60,7 @@ fn gemtext() {
                 };
 
                 // Header
-                if let Some(result) = Header::from(line) {
+                if let Some(result) = Header::parse(line) {
                     headers.push(result);
                     continue;
                 }
