@@ -37,7 +37,7 @@ impl Header {
 }
 
 pub trait Gemtext {
-    /// Get [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) value from `Self`
+    /// Get [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) value for `Self`
     fn as_value(&self) -> Option<&Self>;
     /// Convert `Self` to `Level`
     fn to_level(&self) -> Option<Level>;
@@ -46,7 +46,7 @@ pub trait Gemtext {
 }
 
 impl Gemtext for str {
-    fn as_value(&self) -> Option<&Self> {
+    fn as_value(&self) -> Option<&str> {
         if let Some(h3) = self.strip_prefix(TAG_H3) {
             if h3.trim_start().starts_with(TAG_H1) {
                 return None; // H4+
