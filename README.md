@@ -29,7 +29,7 @@ use ggemtext::line::{
     link::Link,
     list::List,
     quote::Quote,
-};
+}
 ```
 
 **Prepare document**
@@ -50,7 +50,7 @@ for line in gemtext.lines() {
 match Inline::from("```inline```") {
     Some(inline) => assert_eq!(inline.value, "inline"),
     None => assert!(false),
-};
+}
 ```
 
 ##### Multiline
@@ -67,7 +67,7 @@ match Multiline::begin_from("```alt") {
         assert_eq!(multiline.buffer.len(), 3);
     }
     None => assert!(false),
-};
+}
 ```
 
 #### Header
@@ -79,7 +79,7 @@ match Header::from("# H1") {
         assert_eq!(h1.value, "H1");
     }
     None => assert!(false),
-}; // H1, H2, H3
+} // H1, H2, H3
 ```
 
 #### Link
@@ -108,16 +108,26 @@ match Link::from(
         assert_eq!(link.uri.to_string(), "gemini://geminiprotocol.net");
     }
     None => assert!(false),
-};
+}
 ```
 
 #### List
 
+##### Struct
+
 ``` rust
-match List::from("* Item") {
+match List::parse("* Item") {
     Some(list) => assert_eq!(list.value, "Item"),
     None => assert!(false),
-};
+}
+```
+
+##### Trait
+
+``` rust
+use ggemtext::line::list::Gemtext;
+assert_eq!("* Item".as_value(), Some("Item"))
+assert_eq!("Item".to_source(), "* Item")
 ```
 
 #### Quote
@@ -126,7 +136,7 @@ match List::from("* Item") {
 match Quote::from("> Quote") {
     Some(quote) => assert_eq!(quote.value, "Quote"),
     None => assert!(false),
-};
+}
 ```
 
 ## Integrations
