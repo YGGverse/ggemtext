@@ -1,4 +1,5 @@
-use glib::{Regex, RegexCompileFlags, RegexMatchFlags};
+/// [List item](https://geminiprotocol.net/docs/gemtext-specification.gmi#list-items) tag
+pub const TAG: char = '*';
 
 /// [List](https://geminiprotocol.net/docs/gemtext-specification.gmi#list-items) entity holder
 pub struct List {
@@ -8,19 +9,46 @@ pub struct List {
 impl List {
     // Constructors
 
-    /// Parse `Self` from line string
-    pub fn from(line: &str) -> Option<Self> {
-        // Parse line
-        let regex = Regex::split_simple(
-            r"^\*\s*(.*)$",
-            line,
-            RegexCompileFlags::DEFAULT,
-            RegexMatchFlags::DEFAULT,
-        );
-
-        // Extract formatted value
+    /// Parse `Self` from [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) line
+    pub fn parse(line: &str) -> Option<Self> {
         Some(Self {
-            value: regex.get(1)?.trim().to_string(),
+            value: line.as_value()?.to_string(),
         })
     }
+
+    // Converters
+
+    /// Convert `Self` to [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) line
+    pub fn as_source(&self) -> String {
+        self.value.to_source()
+    }
+}
+
+pub trait Gemtext {
+    /// Get [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) value from `Self`
+    fn as_value(&self) -> Option<&Self>;
+    /// Convert `Self` to [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) line
+    fn to_source(&self) -> String;
+}
+
+impl Gemtext for str {
+    fn as_value(&self) -> Option<&Self> {
+        self.strip_prefix(TAG).map(|s| s.trim())
+    }
+    fn to_source(&self) -> String {
+        format!("{TAG} {}", self.trim())
+    }
+}
+
+#[test]
+fn test() {
+    const SOURCE: &str = "* Item";
+    const VALUE: &str = "Item";
+
+    // test struct
+    assert_eq!(List::parse(SOURCE).unwrap().value, VALUE);
+
+    // test trait
+    assert_eq!(SOURCE.as_value(), Some(VALUE));
+    assert_eq!(VALUE.to_source(), SOURCE)
 }

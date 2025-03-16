@@ -72,7 +72,7 @@ fn gemtext() {
                 }
 
                 // List
-                if let Some(result) = List::from(line) {
+                if let Some(result) = List::parse(line) {
                     list.push(result);
                     continue;
                 }
