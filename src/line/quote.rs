@@ -1,3 +1,6 @@
+pub mod gemtext;
+pub use gemtext::Gemtext;
+
 /// [Quote item](https://geminiprotocol.net/docs/gemtext-specification.gmi#quote-lines) tag
 pub const TAG: char = '>';
 
@@ -24,33 +27,13 @@ impl Quote {
     }
 }
 
-pub trait Gemtext {
-    /// Get [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) value for `Self`
-    fn as_value(&self) -> Option<&str>;
-    /// Convert `Self` to [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) line
-    fn to_source(&self) -> String;
-}
-
-impl Gemtext for str {
-    fn as_value(&self) -> Option<&str> {
-        self.strip_prefix(TAG).map(|s| s.trim())
-    }
-    fn to_source(&self) -> String {
-        format!("{TAG} {}", self.trim())
-    }
-}
-
 #[test]
 fn test() {
     const SOURCE: &str = "> Quote";
     const VALUE: &str = "Quote";
 
-    // test `Quote`
     let quote = Quote::parse(SOURCE).unwrap();
+
     assert_eq!(quote.value, VALUE);
     assert_eq!(quote.to_source(), SOURCE);
-
-    // test `Gemtext`
-    assert_eq!(SOURCE.as_value(), Some(VALUE));
-    assert_eq!(VALUE.to_source(), SOURCE)
 }
