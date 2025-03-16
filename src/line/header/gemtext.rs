@@ -60,3 +60,42 @@ impl Gemtext for str {
         format!("{} {}", level.as_tag(), self.trim())
     }
 }
+
+#[test]
+fn test() {
+    const VALUE: &str = "H";
+    let mut value: Option<&str> = Some(VALUE);
+    for t in ["#", "##", "###", "####"] {
+        if t.len() > 3 {
+            value = None;
+        }
+        assert_eq!(format!("{t}{VALUE}").as_value(), value);
+        assert_eq!(format!("{t}{VALUE} ").as_value(), value);
+        assert_eq!(format!("{t} {VALUE}").as_value(), value);
+        assert_eq!(format!("{t} {VALUE} ").as_value(), value);
+    }
+
+    fn to_source(level: &Level) {
+        assert_eq!(
+            VALUE.to_source(level),
+            format!("{} {VALUE}", level.as_tag())
+        );
+    }
+    to_source(&Level::H1);
+    to_source(&Level::H2);
+    to_source(&Level::H3);
+
+    fn to_level(l: &Level) {
+        fn assert(s: String, l: &str) {
+            assert_eq!(s.to_level().unwrap().as_tag(), l);
+        }
+        let t = l.as_tag();
+        assert(format!("{t} {VALUE}"), t);
+        assert(format!("{t} {VALUE} "), t);
+        assert(format!("{t}{VALUE} "), t);
+        assert(format!("{t} {VALUE} "), t);
+    }
+    to_level(&Level::H1);
+    to_level(&Level::H2);
+    to_level(&Level::H3);
+}
