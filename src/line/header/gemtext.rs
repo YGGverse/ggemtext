@@ -40,11 +40,12 @@ impl Gemtext for str {
         self.as_value_match_level(Level::H3)
     }
     fn as_value_match_level(&self, level: Level) -> Option<&str> {
-        if let Some(value) = self.strip_prefix(level.as_tag()) {
-            if value.trim_start().starts_with(Level::H1.as_tag()) {
+        if let Some(postfix) = self.strip_prefix(level.as_tag()) {
+            let value = postfix.trim();
+            if value.starts_with(Level::H1.as_tag()) {
                 return None;
             }
-            return Some(value.trim());
+            return Some(value);
         }
         None
     }
