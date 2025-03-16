@@ -19,6 +19,7 @@ impl Link {
         if !line.starts_with(TAG) {
             return None;
         }
+
         // Define initial values
         let mut alt = None;
         let mut timestamp = None;
