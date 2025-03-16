@@ -113,7 +113,7 @@ match Link::from(
 
 #### List
 
-##### Struct
+**Struct**
 
 ``` rust
 match List::parse("* Item") {
@@ -122,7 +122,7 @@ match List::parse("* Item") {
 }
 ```
 
-##### Trait
+**Trait**
 
 ``` rust
 use ggemtext::line::list::Gemtext;
@@ -132,7 +132,7 @@ assert_eq!("Item".to_source(), "* Item")
 
 #### Quote
 
-##### Struct
+**Struct**
 
 ``` rust
 match Quote::from("> Quote") {
@@ -141,7 +141,7 @@ match Quote::from("> Quote") {
 }
 ```
 
-##### Trait
+**Trait**
 
 ``` rust
 use ggemtext::line::quote::Gemtext;
