@@ -19,7 +19,7 @@ impl List {
     // Converters
 
     /// Convert `Self` to [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) line
-    pub fn as_source(&self) -> String {
+    pub fn to_source(&self) -> String {
         self.value.to_source()
     }
 }
@@ -45,10 +45,12 @@ fn test() {
     const SOURCE: &str = "* Item";
     const VALUE: &str = "Item";
 
-    // test struct
-    assert_eq!(List::parse(SOURCE).unwrap().value, VALUE);
+    // test `List`
+    let list = List::parse(SOURCE).unwrap();
+    assert_eq!(list.value, VALUE);
+    assert_eq!(list.to_source(), SOURCE);
 
-    // test trait
+    // test `Gemtext`
     assert_eq!(SOURCE.as_value(), Some(VALUE));
     assert_eq!(VALUE.to_source(), SOURCE)
 }
