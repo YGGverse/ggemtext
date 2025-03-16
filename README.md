@@ -132,11 +132,21 @@ assert_eq!("Item".to_source(), "* Item")
 
 #### Quote
 
+##### Struct
+
 ``` rust
 match Quote::from("> Quote") {
     Some(quote) => assert_eq!(quote.value, "Quote"),
     None => assert!(false),
 }
+```
+
+##### Trait
+
+``` rust
+use ggemtext::line::quote::Gemtext;
+assert_eq!("> Quote".as_value(), Some("Quote"))
+assert_eq!("Quote".to_source(), "> Quote")
 ```
 
 ## Integrations
