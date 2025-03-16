@@ -72,14 +72,25 @@ match Multiline::begin_from("```alt") {
 
 #### Header
 
+**Struct**
+
 ``` rust
-match Header::from("# H1") {
+match Header::parse("# H1") {
     Some(h1) => {
         assert_eq!(h1.level as u8, Level::H1 as u8);
         assert_eq!(h1.value, "H1");
     }
     None => assert!(false),
 } // H1, H2, H3
+```
+
+**Trait**
+
+``` rust
+use ggemtext::line::header::{Gemtext, Level};
+assert_eq!("# H1".as_value(), Some("H1"));
+assert_eq!("H1".to_source(&Level::H1), "# H1");
+// H1, H2, H3
 ```
 
 #### Link
@@ -135,7 +146,7 @@ assert_eq!("Item".to_source(), "* Item")
 **Struct**
 
 ``` rust
-match Quote::from("> Quote") {
+match Quote::parse("> Quote") {
     Some(quote) => assert_eq!(quote.value, "Quote"),
     None => assert!(false),
 }
