@@ -1,5 +1,7 @@
 use glib::{DateTime, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags};
 
+pub const TAG: &str = "=>";
+
 /// [Link](https://geminiprotocol.net/docs/gemtext-specification.gmi#link-lines) entity holder
 pub struct Link {
     pub alt: Option<String>,         // [optional] alternative link description
@@ -12,6 +14,11 @@ impl Link {
 
     /// Parse `Self` from line string
     pub fn from(line: &str, base: Option<&Uri>, timezone: Option<&TimeZone>) -> Option<Self> {
+        // Skip next operations on prefix mismatch
+        // * replace regex implementation @TODO
+        if !line.starts_with(TAG) {
+            return None;
+        }
         // Define initial values
         let mut alt = None;
         let mut timestamp = None;

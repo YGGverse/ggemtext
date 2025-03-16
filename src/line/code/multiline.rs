@@ -1,10 +1,11 @@
+use super::TAG;
+
 pub mod error;
 pub use error::Error;
 
 // Shared defaults
 
 pub const NEW_LINE: char = '\n';
-pub const TAG: &str = "```";
 
 /// Multi-line [preformatted](https://geminiprotocol.net/docs/gemtext-specification.gmi#in-pre-formatted-mode) entity holder
 pub struct Multiline {

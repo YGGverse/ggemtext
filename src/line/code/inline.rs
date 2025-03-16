@@ -1,3 +1,4 @@
+use super::TAG;
 use glib::{Regex, RegexCompileFlags, RegexMatchFlags};
 
 /// Inline [preformatted](https://geminiprotocol.net/docs/gemtext-specification.gmi#in-pre-formatted-mode) entity holder
@@ -10,6 +11,12 @@ impl Inline {
 
     /// Parse `Self` from line string
     pub fn from(line: &str) -> Option<Self> {
+        // Skip next operations on prefix and postfix mismatch `TAG`
+        // * replace regex implementation @TODO
+        if !line.starts_with(TAG) && !line.ends_with(TAG) {
+            return None;
+        }
+
         // Parse line
         let regex = Regex::split_simple(
             r"^`{3}([^`]+)`{3}$",
