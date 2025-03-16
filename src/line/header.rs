@@ -46,29 +46,30 @@ impl Header {
 
 #[test]
 fn test() {
-    fn test(source: &str, value: &str) {
-        fn filter(s: &str) -> String {
+    fn test(source: &str, value: &str, level: Level) {
+        fn f(s: &str) -> String {
             s.chars().filter(|&c| c != ' ').collect()
         }
         let header = Header::parse(source).unwrap();
         assert_eq!(header.value, value);
-        assert_eq!(filter(&header.to_source()), filter(source));
+        assert_eq!(header.level.as_tag(), level.as_tag());
+        assert_eq!(f(&header.to_source()), f(source));
     }
     // h1
-    test("# H1", "H1");
-    test("# H1 ", "H1");
-    test("#H1", "H1");
-    test("#H1 ", "H1");
+    test("# H1", "H1", Level::H1);
+    test("# H1 ", "H1", Level::H1);
+    test("#H1", "H1", Level::H1);
+    test("#H1 ", "H1", Level::H1);
     // h2
-    test("## H2", "H2");
-    test("## H2 ", "H2");
-    test("##H2", "H2");
-    test("##H2 ", "H2");
+    test("## H2", "H2", Level::H2);
+    test("## H2 ", "H2", Level::H2);
+    test("##H2", "H2", Level::H2);
+    test("##H2 ", "H2", Level::H2);
     // h3
-    test("### H3", "H3");
-    test("### H3 ", "H3");
-    test("###H3", "H3");
-    test("###H3 ", "H3");
+    test("### H3", "H3", Level::H3);
+    test("### H3 ", "H3", Level::H3);
+    test("###H3", "H3", Level::H3);
+    test("###H3 ", "H3", Level::H3);
     // other
     assert!(Header::parse("H").is_none());
     assert!(Header::parse("#### H").is_none())
