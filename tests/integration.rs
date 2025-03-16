@@ -78,7 +78,7 @@ fn gemtext() {
                 }
 
                 // Quote
-                if let Some(result) = Quote::from(line) {
+                if let Some(result) = Quote::parse(line) {
                     quote.push(result);
                     continue;
                 }
