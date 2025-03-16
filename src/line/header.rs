@@ -43,3 +43,33 @@ impl Header {
         self.value.to_source(&self.level)
     }
 }
+
+#[test]
+fn test() {
+    fn test(source: &str, value: &str) {
+        fn filter(s: &str) -> String {
+            s.chars().filter(|&c| c != ' ').collect()
+        }
+        let header = Header::parse(source).unwrap();
+        assert_eq!(header.value, value);
+        assert_eq!(filter(&header.to_source()), filter(source));
+    }
+    // h1
+    test("# H1", "H1");
+    test("# H1 ", "H1");
+    test("#H1", "H1");
+    test("#H1 ", "H1");
+    // h2
+    test("## H2", "H2");
+    test("## H2 ", "H2");
+    test("##H2", "H2");
+    test("##H2 ", "H2");
+    // h3
+    test("### H3", "H3");
+    test("### H3 ", "H3");
+    test("###H3", "H3");
+    test("###H3 ", "H3");
+    // other
+    assert!(Header::parse("H").is_none());
+    assert!(Header::parse("#### H").is_none())
+}
