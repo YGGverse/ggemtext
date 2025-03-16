@@ -75,11 +75,8 @@ fn test() {
         assert_eq!(format!("{t} {VALUE} ").as_value(), value);
     }
 
-    fn to_source(level: &Level) {
-        assert_eq!(
-            VALUE.to_source(level),
-            format!("{} {VALUE}", level.as_tag())
-        );
+    fn to_source(l: &Level) {
+        assert_eq!(VALUE.to_source(l), format!("{} {VALUE}", l.as_tag()));
     }
     to_source(&Level::H1);
     to_source(&Level::H2);
