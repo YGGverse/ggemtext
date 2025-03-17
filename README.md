@@ -93,7 +93,7 @@ assert_eq!("H1".to_source(&Level::H1), "# H1");
 #### Link
 
 ``` rust
-use crate::line::Link;
+use ggemtext::line::Link;
 
 const SOURCE: &str = "=> gemini://geminiprotocol.net 1965-01-19 Gemini";
 
