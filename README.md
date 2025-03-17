@@ -28,9 +28,7 @@ for line in gemtext.lines() {
 }
 ```
 
-#### Code
-
-##### Inline
+#### Inline code
 
 **Struct**
 
@@ -50,7 +48,7 @@ assert_eq!("```inline```".as_value(), Some("inline"))
 assert_eq!("inline".to_source(), "```inline```")
 ```
 
-##### Multiline
+#### Multiline code
 
 ``` rust
 use ggemtext::line::code::Multiline;
