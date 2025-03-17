@@ -32,12 +32,22 @@ for line in gemtext.lines() {
 
 ##### Inline
 
+**Struct**
+
 ``` rust
 use ggemtext::line::code::Inline;
 match Inline::from("```inline```") {
     Some(inline) => assert_eq!(inline.value, "inline"),
     None => assert!(false),
 }
+```
+
+**Trait**
+
+``` rust
+use ggemtext::line::code::inline::Gemtext;
+assert_eq!("```inline```".as_value(), Some("inline"))
+assert_eq!("inline".to_source(), "```inline```")
 ```
 
 ##### Multiline
