@@ -25,13 +25,10 @@ fn gemtext() {
             let mut code_multiline_buffer: Option<Multiline> = None;
 
             // Define base URI as integration.gmi contain one relative link
-            let base = match Uri::parse("gemini://geminiprotocol.net", UriFlags::NONE) {
-                Ok(uri) => Some(uri),
-                Err(_) => None,
-            };
+            let base = Uri::parse("gemini://geminiprotocol.net", UriFlags::NONE).unwrap();
 
             // Define timezone as integration.gmi contain one links with date
-            let timezone = Some(TimeZone::local());
+            let timezone = TimeZone::local();
 
             // Parse document by line
             for line in gemtext.lines() {
@@ -66,7 +63,7 @@ fn gemtext() {
                 }
 
                 // Link
-                if let Some(result) = Link::from(line, base.as_ref(), timezone.as_ref()) {
+                if let Some(result) = Link::parse(line) {
                     links.push(result);
                     continue;
                 }
@@ -150,52 +147,64 @@ fn gemtext() {
                 let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
-                assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(item.time(Some(&timezone)), None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_str(),
+                    "gemini://geminiprotocol.net"
+                );
             } // #1
             {
                 let item = link.next().unwrap();
 
-                assert_eq!(item.alt, None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net"
+                );
 
-                let timestamp = item.timestamp.clone().unwrap();
-                assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 1);
-                assert_eq!(timestamp.day_of_month(), 19);
+                let time = item.time(Some(&timezone)).unwrap();
+                assert_eq!(time.year(), 1965);
+                assert_eq!(time.month(), 1);
+                assert_eq!(time.day_of_month(), 19);
 
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(item.alt, Some("1965-01-19".to_string()));
             } // #2
             {
                 let item = link.next().unwrap();
 
                 assert_eq!(item.alt.clone().unwrap(), "Gemini");
-                assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(item.time(Some(&timezone)), None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net"
+                );
             } // #3
             {
                 let item = link.next().unwrap();
 
-                assert_eq!(item.alt.clone().unwrap(), "Gemini");
+                assert_eq!(item.alt, Some("1965-01-19 Gemini".to_string()));
 
-                let timestamp = item.timestamp.clone().unwrap();
-                assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 1);
-                assert_eq!(timestamp.day_of_month(), 19);
+                let time = item.time(Some(&timezone)).unwrap();
+                assert_eq!(time.year(), 1965);
+                assert_eq!(time.month(), 1);
+                assert_eq!(time.day_of_month(), 19);
 
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net"
+                );
             } // #4
             {
                 let item = link.next().unwrap();
 
-                assert_eq!(item.alt.clone().unwrap(), "Gemini");
+                assert_eq!(item.alt, Some("1965-01-19 Gemini".to_string()));
 
-                let timestamp = item.timestamp.clone().unwrap();
-                assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 1);
-                assert_eq!(timestamp.day_of_month(), 19);
+                let time = item.time(Some(&timezone)).unwrap();
+                assert_eq!(time.year(), 1965);
+                assert_eq!(time.month(), 1);
+                assert_eq!(time.day_of_month(), 19);
 
                 assert_eq!(
-                    item.uri.to_str(),
+                    item.uri(Some(&base)).unwrap().to_string(),
                     "gemini://geminiprotocol.net/docs/gemtext.gmi"
                 );
             } // #5
@@ -203,29 +212,41 @@ fn gemtext() {
                 let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
-                assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(item.time(Some(&timezone)), None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net"
+                );
             } // #6
             {
                 let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
-                assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net");
+                assert_eq!(item.time(Some(&timezone)), None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net"
+                );
             } // #7
             {
                 let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
-                assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net/path");
+                assert_eq!(item.time(Some(&timezone)), None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net/path"
+                );
             } // #8
             {
                 let item = link.next().unwrap();
 
                 assert_eq!(item.alt, None);
-                assert_eq!(item.timestamp, None);
-                assert_eq!(item.uri.to_str(), "gemini://geminiprotocol.net/");
+                assert_eq!(item.time(Some(&timezone)), None);
+                assert_eq!(
+                    item.uri(Some(&base)).unwrap().to_string(),
+                    "gemini://geminiprotocol.net/"
+                );
             } // #9
 
             // Validate lists

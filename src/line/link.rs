@@ -1,104 +1,119 @@
-use glib::{DateTime, Regex, RegexCompileFlags, RegexMatchFlags, TimeZone, Uri, UriFlags};
+use glib::{DateTime, TimeZone, Uri, UriFlags};
+const S: char = ' ';
 
 pub const TAG: &str = "=>";
 
 /// [Link](https://geminiprotocol.net/docs/gemtext-specification.gmi#link-lines) entity holder
 pub struct Link {
-    pub alt: Option<String>,         // [optional] alternative link description
-    pub timestamp: Option<DateTime>, // [optional] valid link DateTime object
-    pub uri: Uri,                    // [required] valid link URI object
+    /// For performance reasons, hold Gemtext date and alternative together as the optional String
+    /// * to extract valid [DateTime](https://docs.gtk.org/glib/struct.DateTime.html) use `time` implementation method
+    pub alt: Option<String>,
+    /// For performance reasons, hold URL as the raw String
+    /// * to extract valid [Uri](https://docs.gtk.org/glib/struct.Uri.html) use `uri` implementation method
+    pub url: String,
 }
 
 impl Link {
     // Constructors
 
     /// Parse `Self` from line string
-    pub fn from(line: &str, base: Option<&Uri>, timezone: Option<&TimeZone>) -> Option<Self> {
-        // Skip next operations on prefix mismatch
-        // * replace regex implementation @TODO
-        if !line.starts_with(TAG) {
+    pub fn parse(line: &str) -> Option<Self> {
+        let l = line.strip_prefix(TAG)?.trim();
+        let u = l.find(S).map_or(l, |i| &l[..i]);
+        if u.is_empty() {
             return None;
         }
-
-        // Define initial values
-        let mut alt = None;
-        let mut timestamp = None;
-
-        // Begin line parse
-        let regex = Regex::split_simple(
-            r"^=>\s*([^\s]+)\s*(\d{4}-\d{2}-\d{2})?\s*(.+)?$",
-            line,
-            RegexCompileFlags::DEFAULT,
-            RegexMatchFlags::DEFAULT,
-        );
-
-        // Detect address required to continue
-        let mut unresolved_address = regex.get(1)?.to_string();
-
-        // Relative scheme patch
-        // https://datatracker.ietf.org/doc/html/rfc3986#section-4.2
-        if let Some(p) = unresolved_address.strip_prefix("//") {
-            let b = base?;
-            let postfix = p.trim_start_matches(":");
-            unresolved_address = format!(
-                "{}://{}",
-                b.scheme(),
-                if postfix.is_empty() {
-                    format!("{}/", b.host()?)
-                } else {
-                    postfix.into()
-                }
-            )
-        }
-        // Convert address to the valid URI
-        let uri = match base {
-            // Base conversion requested
-            Some(base_uri) => {
-                // Convert relative address to absolute
-                match Uri::resolve_relative(
-                    Some(&base_uri.to_str()),
-                    unresolved_address.as_str(),
-                    UriFlags::NONE,
-                ) {
-                    Ok(resolved_str) => {
-                        // Try convert string to the valid URI
-                        match Uri::parse(&resolved_str, UriFlags::NONE) {
-                            Ok(resolved_uri) => resolved_uri,
-                            Err(_) => return None,
-                        }
-                    }
-                    Err(_) => return None,
-                }
-            }
-            // Base resolve not requested
-            None => {
-                // Try convert address to valid URI
-                match Uri::parse(&unresolved_address, UriFlags::NONE) {
-                    Ok(unresolved_uri) => unresolved_uri,
-                    Err(_) => return None,
-                }
-            }
-        };
-
-        // Timestamp
-        if let Some(date) = regex.get(2) {
-            timestamp = match DateTime::from_iso8601(&format!("{date}T00:00:00"), timezone) {
-                Ok(value) => Some(value),
-                Err(_) => None,
-            }
-        }
-
-        // Alt
-        if let Some(value) = regex.get(3) {
-            if !value.is_empty() {
-                alt = Some(value.to_string())
-            }
-        };
-
         Some(Self {
-            alt,
-            timestamp,
-            uri,
+            alt: l
+                .get(u.len()..)
+                .map(|a| a.trim())
+                .filter(|a| !a.is_empty())
+                .map(|a| a.to_string()),
+            url: u.to_string(),
         })
     }
+
+    // Converters
+
+    /// Convert `Self` to [Gemtext](https://geminiprotocol.net/docs/gemtext-specification.gmi) line
+    pub fn to_source(&self) -> String {
+        let mut s = String::with_capacity(
+            TAG.len() + self.url.len() + self.alt.as_ref().map_or(0, |a| a.len()) + 2,
+        );
+        s.push_str(TAG);
+        s.push(S);
+        s.push_str(&self.url);
+        if let Some(ref alt) = self.alt {
+            s.push(S);
+            s.push_str(alt);
+        }
+        s
+    }
+
+    // Getters
+
+    /// Get valid [DateTime](https://docs.gtk.org/glib/struct.DateTime.html) for `Self`
+    pub fn time(&self, timezone: Option<&TimeZone>) -> Option<DateTime> {
+        let a = self.alt.as_ref()?;
+        let t = &a[..a.find(S).unwrap_or(a.len())];
+        DateTime::from_iso8601(&format!("{t}T00:00:00"), timezone).ok()
+    }
+
+    /// Get valid [Uri](https://docs.gtk.org/glib/struct.Uri.html) for `Self`
+    pub fn uri(&self, base: Option<&Uri>) -> Option<Uri> {
+        // Relative scheme patch
+        // https://datatracker.ietf.org/doc/html/rfc3986#section-4.2
+        let unresolved_address = match self.url.strip_prefix("//") {
+            Some(p) => {
+                let b = base?;
+                let s = p.trim_start_matches(":");
+                &format!(
+                    "{}://{}",
+                    b.scheme(),
+                    if s.is_empty() {
+                        format!("{}/", b.host()?)
+                    } else {
+                        s.into()
+                    }
+                )
+            }
+            None => &self.url,
+        };
+        // Convert address to the valid URI,
+        // resolve to absolute URL format if the target is relative
+        match base {
+            Some(base_uri) => match Uri::resolve_relative(
+                Some(&base_uri.to_str()),
+                unresolved_address,
+                UriFlags::NONE,
+            ) {
+                Ok(resolved_str) => Uri::parse(&resolved_str, UriFlags::NONE).ok(),
+                Err(_) => None,
+            },
+            None => Uri::parse(unresolved_address, UriFlags::NONE).ok(),
+        }
+    }
+}
+
+#[test]
+fn test() {
+    use crate::line::Link;
+
+    const SOURCE: &str = "=> gemini://geminiprotocol.net 1965-01-19 Gemini";
+
+    let link = Link::parse(SOURCE).unwrap();
+
+    assert_eq!(link.alt, Some("1965-01-19 Gemini".to_string()));
+    assert_eq!(link.url, "gemini://geminiprotocol.net");
+
+    let uri = link.uri(None).unwrap();
+    assert_eq!(uri.scheme(), "gemini");
+    assert_eq!(uri.host().unwrap(), "geminiprotocol.net");
+
+    let time = link.time(Some(&glib::TimeZone::local())).unwrap();
+    assert_eq!(time.year(), 1965);
+    assert_eq!(time.month(), 1);
+    assert_eq!(time.day_of_month(), 19);
+
+    assert_eq!(link.to_source(), SOURCE);
 }

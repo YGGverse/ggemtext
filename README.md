@@ -34,7 +34,7 @@ for line in gemtext.lines() {
 
 ``` rust
 use ggemtext::line::code::Inline;
-match Inline::from("```inline```") {
+match Inline::parse("```inline```") {
     Some(inline) => assert_eq!(inline.value, "inline"),
     None => assert!(false),
 }
@@ -93,31 +93,25 @@ assert_eq!("H1".to_source(&Level::H1), "# H1");
 #### Link
 
 ``` rust
-use ggemtext::line::Link;
-match Link::from(
-    "=> gemini://geminiprotocol.net 1965-01-19 Gemini",
-    None, // absolute path given, base not wanted
-    Some(&glib::TimeZone::local()),
-) {
-    Some(link) => {
-        // Alt
-        assert_eq!(link.alt, Some("Gemini".into()));
+use crate::line::Link;
 
-        // Date
-        match link.timestamp {
-            Some(timestamp) => {
-                assert_eq!(timestamp.year(), 1965);
-                assert_eq!(timestamp.month(), 1);
-                assert_eq!(timestamp.day_of_month(), 19);
-            }
-            None => assert!(false),
-        }
+const SOURCE: &str = "=> gemini://geminiprotocol.net 1965-01-19 Gemini";
 
-        // URI
-        assert_eq!(link.uri.to_string(), "gemini://geminiprotocol.net");
-    }
-    None => assert!(false),
-}
+let link = Link::parse(SOURCE).unwrap();
+
+assert_eq!(link.alt, Some("1965-01-19 Gemini".to_string()));
+assert_eq!(link.url, "gemini://geminiprotocol.net");
+
+let uri = link.uri(None).unwrap();
+assert_eq!(uri.scheme(), "gemini");
+assert_eq!(uri.host().unwrap(), "geminiprotocol.net");
+
+let time = link.time(Some(&glib::TimeZone::local())).unwrap();
+assert_eq!(time.year(), 1965);
+assert_eq!(time.month(), 1);
+assert_eq!(time.day_of_month(), 19);
+
+assert_eq!(link.to_source(), SOURCE);
 ```
 
 #### List
