@@ -20,20 +20,6 @@ cargo add ggemtext
 
 Line parser, useful for [TextTag](https://docs.gtk.org/gtk4/class.TextTag.html) operations in [TextBuffer](https://docs.gtk.org/gtk4/class.TextBuffer.html) context.
 
-**Connect dependencies**
-
-``` rust
-use ggemtext::line::{
-    code::{Inline, Multiline},
-    header::{Header, Level},
-    link::Link,
-    list::List,
-    quote::Quote,
-}
-```
-
-**Prepare document**
-
 Iterate Gemtext lines to continue with [Line](#Line) API:
 
 ``` rust
@@ -47,6 +33,7 @@ for line in gemtext.lines() {
 ##### Inline
 
 ``` rust
+use ggemtext::line::code::Inline;
 match Inline::from("```inline```") {
     Some(inline) => assert_eq!(inline.value, "inline"),
     None => assert!(false),
@@ -56,6 +43,7 @@ match Inline::from("```inline```") {
 ##### Multiline
 
 ``` rust
+use ggemtext::line::code::Multiline;
 match Multiline::begin_from("```alt") {
     Some(mut multiline) => {
         assert!(Multiline::continue_from(&mut multiline, "line 1").is_ok());
@@ -75,6 +63,7 @@ match Multiline::begin_from("```alt") {
 **Struct**
 
 ``` rust
+use ggemtext::line::{Header, header::Level};
 match Header::parse("# H1") {
     Some(h1) => {
         assert_eq!(h1.level as u8, Level::H1 as u8);
@@ -96,6 +85,7 @@ assert_eq!("H1".to_source(&Level::H1), "# H1");
 #### Link
 
 ``` rust
+use ggemtext::line::Link;
 match Link::from(
     "=> gemini://geminiprotocol.net 1965-01-19 Gemini",
     None, // absolute path given, base not wanted
@@ -127,6 +117,7 @@ match Link::from(
 **Struct**
 
 ``` rust
+use ggemtext::line::List;
 match List::parse("* Item") {
     Some(list) => assert_eq!(list.value, "Item"),
     None => assert!(false),
@@ -146,6 +137,7 @@ assert_eq!("Item".to_source(), "* Item")
 **Struct**
 
 ``` rust
+use ggemtext::line::Quote;
 match Quote::parse("> Quote") {
     Some(quote) => assert_eq!(quote.value, "Quote"),
     None => assert!(false),
