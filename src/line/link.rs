@@ -42,10 +42,10 @@ impl Link {
         );
         s.push_str(TAG);
         s.push(S);
-        s.push_str(&self.url);
+        s.push_str(self.url.trim());
         if let Some(ref alt) = self.alt {
             s.push(S);
-            s.push_str(alt);
+            s.push_str(alt.trim());
         }
         s
     }
