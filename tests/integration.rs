@@ -36,7 +36,7 @@ fn gemtext() {
             // Parse document by line
             for line in gemtext.lines() {
                 // Inline code
-                if let Some(result) = Inline::from(line) {
+                if let Some(result) = Inline::parse(line) {
                     code_inline.push(result);
                     continue;
                 }
