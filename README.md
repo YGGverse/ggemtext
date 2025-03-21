@@ -28,39 +28,19 @@ for line in gemtext.lines() {
 }
 ```
 
-#### Inline code
-
-**Struct**
+#### Code
 
 ``` rust
-use ggemtext::line::code::Inline;
-match Inline::parse("```inline```") {
-    Some(inline) => assert_eq!(inline.value, "inline"),
-    None => assert!(false),
-}
-```
+use ggemtext::line::Code;
+match Code::begin_from("```alt") {
+    Some(mut code) => {
+        assert!(code.continue_from("line 1").is_ok());
+        assert!(code.continue_from("line 2").is_ok());
+        assert!(code.continue_from("```").is_ok()); // complete
 
-**Trait**
-
-``` rust
-use ggemtext::line::code::inline::Gemtext;
-assert_eq!("```inline```".as_value(), Some("inline"))
-assert_eq!("inline".to_source(), "```inline```")
-```
-
-#### Multiline code
-
-``` rust
-use ggemtext::line::code::Multiline;
-match Multiline::begin_from("```alt") {
-    Some(mut multiline) => {
-        assert!(Multiline::continue_from(&mut multiline, "line 1").is_ok());
-        assert!(Multiline::continue_from(&mut multiline, "line 2").is_ok());
-        assert!(Multiline::continue_from(&mut multiline, "```").is_ok()); // complete
-
-        assert!(multiline.completed);
-        assert_eq!(multiline.alt, Some("alt".into()));
-        assert_eq!(multiline.buffer.len(), 3);
+        assert!(code.is_completed);
+        assert_eq!(code.alt, Some("alt".into()));
+        assert_eq!(code.value.len(), 12 + 2); // +NL
     }
     None => assert!(false),
 }
