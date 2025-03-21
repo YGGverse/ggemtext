@@ -1,9 +1,6 @@
 use ggemtext::line::{
-    code::{Inline, Multiline},
+    Code, Link, List, Quote,
     header::{Header, Level},
-    link::Link,
-    list::List,
-    quote::Quote,
 };
 
 use glib::{TimeZone, Uri, UriFlags};
@@ -14,15 +11,14 @@ fn gemtext() {
     match fs::read_to_string("tests/integration.gmi") {
         Ok(gemtext) => {
             // Init tags collection
-            let mut code_inline: Vec<Inline> = Vec::new();
-            let mut code_multiline: Vec<Multiline> = Vec::new();
+            let mut code: Vec<Code> = Vec::new();
             let mut headers: Vec<Header> = Vec::new();
             let mut links: Vec<Link> = Vec::new();
             let mut list: Vec<List> = Vec::new();
             let mut quote: Vec<Quote> = Vec::new();
 
             // Define preformatted buffer
-            let mut code_multiline_buffer: Option<Multiline> = None;
+            let mut code_buffer: Option<Code> = None;
 
             // Define base URI as integration.gmi contain one relative link
             let base = Uri::parse("gemini://geminiprotocol.net", UriFlags::NONE).unwrap();
@@ -32,25 +28,18 @@ fn gemtext() {
 
             // Parse document by line
             for line in gemtext.lines() {
-                // Inline code
-                if let Some(result) = Inline::parse(line) {
-                    code_inline.push(result);
-                    continue;
-                }
-
-                // Multiline code
-                match code_multiline_buffer {
+                match code_buffer {
                     None => {
-                        if let Some(code) = Multiline::begin_from(line) {
-                            code_multiline_buffer = Some(code);
+                        if let Some(code) = Code::begin_from(line) {
+                            code_buffer = Some(code);
                             continue;
                         }
                     }
-                    Some(ref mut result) => {
-                        assert!(Multiline::continue_from(result, line).is_ok());
-                        if result.completed {
-                            code_multiline.push(code_multiline_buffer.take().unwrap());
-                            code_multiline_buffer = None;
+                    Some(ref mut c) => {
+                        assert!(c.continue_from(line).is_ok());
+                        if c.is_completed {
+                            code.push(code_buffer.take().unwrap());
+                            code_buffer = None;
                         }
                         continue;
                     }
@@ -81,15 +70,10 @@ fn gemtext() {
                 }
             }
 
-            // Validate inline code
-            assert_eq!(code_inline.len(), 1);
-            assert_eq!(code_inline.first().unwrap().value, "inline code");
-
-            // Validate multiline code
-            assert_eq!(code_multiline.len(), 2);
-
+            // Validate code
+            assert_eq!(code.len(), 2);
             {
-                let item = code_multiline.first().unwrap();
+                let item = code.first().unwrap();
                 assert_eq!(item.alt.clone().unwrap(), "alt text");
 
                 assert_eq!(item.value.lines().count(), 2);
@@ -100,7 +84,7 @@ fn gemtext() {
             } // #1
 
             {
-                let item = code_multiline.get(1).unwrap();
+                let item = code.get(1).unwrap();
                 assert_eq!(item.alt.clone(), None);
 
                 assert_eq!(item.value.lines().count(), 2);
