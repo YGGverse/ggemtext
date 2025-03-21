@@ -85,6 +85,6 @@ fn test() {
                 format!("{TAG} alt{NEW_LINE}line 1{NEW_LINE}line 2{NEW_LINE}{TAG}")
             )
         }
-        None => assert!(false),
+        None => unreachable!(),
     }
 }

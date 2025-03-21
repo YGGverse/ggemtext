@@ -42,7 +42,7 @@ match Code::begin_from("```alt") {
         assert_eq!(code.alt, Some("alt".into()));
         assert_eq!(code.value.len(), 12 + 2); // +NL
     }
-    None => assert!(false),
+    None => unreachable!(),
 }
 ```
 
@@ -57,7 +57,7 @@ match Header::parse("# H1") {
         assert_eq!(h1.level as u8, Level::H1 as u8);
         assert_eq!(h1.value, "H1");
     }
-    None => assert!(false),
+    None => unreachable!(),
 } // H1, H2, H3
 ```
 
@@ -102,7 +102,7 @@ assert_eq!(link.to_source(), SOURCE);
 use ggemtext::line::List;
 match List::parse("* Item") {
     Some(list) => assert_eq!(list.value, "Item"),
-    None => assert!(false),
+    None => unreachable!(),
 }
 ```
 
@@ -122,7 +122,7 @@ assert_eq!("Item".to_source(), "* Item")
 use ggemtext::line::Quote;
 match Quote::parse("> Quote") {
     Some(quote) => assert_eq!(quote.value, "Quote"),
-    None => assert!(false),
+    None => unreachable!(),
 }
 ```
 
