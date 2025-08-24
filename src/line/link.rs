@@ -1,4 +1,5 @@
 use glib::{DateTime, TimeZone, Uri, UriFlags};
+const SEP: [char; 2] = [' ', '\t'];
 const S: char = ' ';
 
 pub const TAG: &str = "=>";
@@ -18,8 +19,8 @@ impl Link {
 
     /// Parse `Self` from line string
     pub fn parse(line: &str) -> Option<Self> {
-        let l = line.strip_prefix(TAG)?.trim();
-        let u = l.find(S).map_or(l, |i| &l[..i]);
+        let l = line.strip_prefix(TAG)?.trim_matches(&SEP);
+        let u = l.find(|c: char| SEP.contains(&c)).map_or(l, |i| &l[..i]);
         if u.is_empty() {
             return None;
         }
@@ -116,4 +117,15 @@ fn test() {
     assert_eq!(time.day_of_month(), 19);
 
     assert_eq!(link.to_source(), SOURCE);
+}
+
+#[test]
+fn test_tab() {
+    use crate::line::Link;
+
+    const SOURCE: &str = "=> gemlog/\tMy gemlog - verbose ramblings";
+
+    let link = Link::parse(SOURCE).unwrap();
+    assert_eq!(link.alt, Some("My gemlog - verbose ramblings".to_string()));
+    assert_eq!(link.url, "gemlog/");
 }
