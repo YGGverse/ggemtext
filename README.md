@@ -1,7 +1,8 @@
 # ggemtext
 
-![Build](https://github.com/YGGverse/ggemtext/actions/workflows/build.yml/badge.svg)
-[![Documentation](https://docs.rs/ggemtext/badge.svg)](https://docs.rs/ggemtext)
+![build](https://github.com/YGGverse/ggemtext/actions/workflows/build.yml/badge.svg)
+[![dependencies](https://deps.rs/repo/github/YGGverse/ggemtext/status.svg)](https://deps.rs/repo/github/YGGverse/ggemtext)
+[![documentation](https://docs.rs/ggemtext/badge.svg)](https://docs.rs/ggemtext)
 [![crates.io](https://img.shields.io/crates/v/ggemtext.svg)](https://crates.io/crates/ggemtext)
 
 Glib-oriented [Gemtext](https://geminiprotocol.net/docs/gemtext.gmi) API
