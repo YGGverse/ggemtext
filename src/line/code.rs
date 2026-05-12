@@ -40,11 +40,13 @@ impl Code {
             return Err(Error::Completed);
         }
 
+        let l = line.trim_end();
+
         // Append to value, trim close tag on exists
-        self.value.push_str(line.trim_end_matches(TAG));
+        self.value.push_str(l.trim_end_matches(TAG));
 
         // Line contain close tag
-        if line.trim_end().ends_with(TAG) {
+        if l.ends_with(TAG) {
             self.is_completed = true;
         } else {
             self.value.push(NEW_LINE);
