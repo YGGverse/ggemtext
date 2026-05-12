@@ -44,7 +44,7 @@ impl Code {
         self.value.push_str(line.trim_end_matches(TAG));
 
         // Line contain close tag
-        if line.ends_with(TAG) {
+        if line.trim_end().ends_with(TAG) {
             self.is_completed = true;
         } else {
             self.value.push(NEW_LINE);
