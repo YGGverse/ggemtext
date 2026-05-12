@@ -17,5 +17,5 @@ repository = "https://github.com/YGGverse/ggemtext"
 
 [dependencies.glib]
 package = "glib"
-version = "0.21.0"
+version = "0.22.7"
 features = ["v2_66"]
